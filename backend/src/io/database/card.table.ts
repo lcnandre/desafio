@@ -26,7 +26,7 @@ export const CardTable = new EntitySchema<Card>({
       type: 'many-to-many',
       target: 'tags',
       joinTable: true,
-      inverseSide: 'posts',
+      inverseSide: 'cards',
     }
   }
 });

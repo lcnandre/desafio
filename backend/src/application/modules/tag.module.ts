@@ -1,0 +1,23 @@
+/* istanbul ignore file */
+import { Module } from '@nestjs/common';
+import { CqrsModule } from '@nestjs/cqrs';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { TagTable } from '../../io/database/tag.table';
+import { TagService } from '../services/tag.service';
+import { CreateTagHandler } from '../../domain/use-cases/tag/create-tag';
+import { TagController } from '../../io/controllers/tag/tag.controller';
+
+@Module({
+  imports: [
+    CqrsModule,
+    TypeOrmModule.forFeature([TagTable])
+  ],
+  providers: [
+    TagService,
+    CreateTagHandler,
+  ],
+  controllers: [TagController],
+  exports: [CqrsModule],
+})
+export class TagModule { }
