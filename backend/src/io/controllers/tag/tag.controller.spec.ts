@@ -11,7 +11,7 @@ import { Tag } from '../../../domain/entities/tag';
 import { TagTable } from '../../../io/database/tag.table';
 import { CreateTagDto } from './dtos/create-tag.dto';
 import { CreateTagHandler } from '../../../domain/use-cases/tag/create-tag';
-import { GetTagHandler } from '../../../domain/use-cases/tag/get-tag';
+import { GetTagHandler } from '../../../domain/use-cases/tag/find-tag';
 import { DeleteTagHandler } from '../../../domain/use-cases/tag/delete-tag';
 import { UpdateTagHandler } from '../../../domain/use-cases/tag/update-tag';
 
@@ -19,7 +19,6 @@ describe('TagController', () => {
   let app: INestApplication;
   let controller: TagController;
   let repository: Repository<Tag>;
-  let tag: Tag;
   let tagToDelete: Tag;
   let tagToUpdate: Tag;
 
@@ -42,7 +41,7 @@ describe('TagController', () => {
 
     controller = module.get<TagController>(TagController);
     repository = module.get<Repository<Tag>>(getRepositoryToken(TagTable));
-    tag = await repository.save(new Tag('test-tag'));
+    await repository.save(new Tag('test-tag'));
     tagToDelete = await repository.save(new Tag('delete-tag'));
     tagToUpdate = await repository.save(new Tag('update-this-tag'));
 
@@ -59,9 +58,11 @@ describe('TagController', () => {
     expect(result.name).toBe('test-tag');
   });
 
-  it('Should fetch an existing tag', async () => {
-    const result = await controller.getTag(tag.id);
+  it('Should find an existing tag', async () => {
+    const result = await controller.findTag(3, 'test');
     expect(result).toBeDefined();
+    expect(result).toBeInstanceOf(Array);
+    expect(result.length).toBeGreaterThanOrEqual(1);
   });
 
   it('Should delete an existing tag', async () => {

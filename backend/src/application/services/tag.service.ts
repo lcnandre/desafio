@@ -3,7 +3,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import { Tag } from '../../domain/entities/tag';
 import { CreateTagCommand } from '../../domain/use-cases/tag/create-tag';
-import { GetTagQuery } from '../../domain/use-cases/tag/get-tag';
+import { GetTagQuery } from '../../domain/use-cases/tag/find-tag';
 import { DeleteTagCommand } from '../../domain/use-cases/tag/delete-tag';
 import { UpdateTagCommand } from '../../domain/use-cases/tag/update-tag';
 
@@ -20,9 +20,9 @@ export class TagService {
     );
   }
 
-  getTag(id: number): Promise<Tag> {
+  findTags(pageSize: number, name: string): Promise<Tag[]> {
     return this.queryBus.execute(
-      new GetTagQuery(id)
+      new GetTagQuery(pageSize, name)
     );
   }
 

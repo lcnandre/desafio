@@ -97,7 +97,17 @@ describe('CardController', () => {
   });
 
   it('Should list cards', async () => {
-    const result = await controller.listCards(1, 4);
+    let result = await controller.listCards(1, 4);
+    expect(result).toBeDefined();
+    expect(result).toBeInstanceOf(Array);
+    expect(result.length).toBe(3);
+
+    result = await controller.listCards(1, 4, initialTags[0].id);
+    expect(result).toBeDefined();
+    expect(result).toBeInstanceOf(Array);
+    expect(result.length).toBe(3);
+
+    result = await controller.listCards(1, 4, initialTags.map(t => t.id));
     expect(result).toBeDefined();
     expect(result).toBeInstanceOf(Array);
     expect(result.length).toBe(3);

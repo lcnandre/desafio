@@ -69,9 +69,15 @@ describe('AppController (e2e)', () => {
 
   it('/tags/ (GET)', () => {
     return request(app.getHttpServer())
-      .get(`/tags/${tag.id}`)
+      .get('/tags')
+      .query({ pageSize: 3, name: 'test' })
       .expect(HttpStatus.OK)
-      .then(checkTagDtoResponse);
+      .then(res => {
+        const result = res.body as TagDto[];
+        expect(result).toBeDefined();
+        expect(result).toBeInstanceOf(Array);
+        expect(result.length).toBeGreaterThan(0);
+      });
   });
 
   it('/tags/ (DELETE)', () => {

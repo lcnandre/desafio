@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { ApiCreatedResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ApiCreatedResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 import { TagService } from '../../../application/services/tag.service';
 import { CreateTagDto } from './dtos/create-tag.dto';
@@ -17,12 +17,13 @@ export class TagController {
     return TagDto.fromTag(tag);
   }
 
-  @Get('/:id')
-  @ApiParam({ name: 'id', example: 1 })
-  @ApiCreatedResponse({ type: TagDto})
-  async getTag(@Param('id') id: number): Promise<TagDto> {
-    const tag = await this.service.getTag(id);
-    return TagDto.fromTag(tag);
+  @Get('/')
+  @ApiQuery({ name: 'pageSize', example: '3', required: false })
+  @ApiQuery({ name: 'name', example: 'my-tag', required: true })
+  @ApiCreatedResponse({ type: TagDto, isArray: true })
+  async findTag(@Query('pageSize') pageSize: number, @Query('name') name: string): Promise<TagDto[]> {
+    const result = await this.service.findTags(+(pageSize | 3), name);
+    return result.map(TagDto.fromTag);
   }
 
   @Delete('/:id')

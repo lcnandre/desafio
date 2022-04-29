@@ -1,16 +1,14 @@
-import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import createMockRepository from '../../../../test/mocks/repository.mock';
-import { Tag } from '../../../domain/entities/tag';
+import { Tag } from '../../entities/tag';
 import { TagTable } from '../../../io/database/tag.table';
-import { GetTagHandler, GetTagQuery } from './get-tag';
+import { GetTagHandler, GetTagQuery } from './find-tag';
 
-describe('Get tag (use case)', () => {
+describe('Find tag (use case)', () => {
   let repository: Repository<Tag>;
-  let tag: Tag;
   
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -23,23 +21,18 @@ describe('Get tag (use case)', () => {
     }).compile();
 
     repository = module.get<Repository<Tag>>(getRepositoryToken(TagTable));
-    tag = await repository.save(new Tag('test-tag'));
+    await repository.save(new Tag('test-tag'));
   });
 
   it('Should fetch an existing tag', async () => {
-    const result = await getTag(tag.id);
+    const result = await findTag('test');
     expect(result).toBeDefined();
-    expect(result).toBeInstanceOf(Tag);
+    expect(result).toBeInstanceOf(Array);
+    expect(result.length).toBe(1);
   });
 
-  it('Should throw NotFoundException if the tag does not exist', async () => {
-    await expect(getTag(-1))
-      .rejects
-      .toThrow(NotFoundException);
-  });
-
-  const getTag = (id: number): Promise<Tag> => {
-    const query = new GetTagQuery(id);
+  const findTag = (name: string): Promise<Tag[]> => {
+    const query = new GetTagQuery(3, name);
     const handler = new GetTagHandler(repository);
 
     return handler.execute(query);
