@@ -4,6 +4,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Card } from '../../domain/entities/card';
 import { CreateCardCommand } from '../../domain/use-cases/card/create-card';
 import { GetCardQuery } from '../../domain/use-cases/card/get-card';
+import { DeleteCardCommand } from '../../domain/use-cases/card/dete-card';
 
 @Injectable()
 export class CardService {
@@ -21,6 +22,12 @@ export class CardService {
   getCard(id: number): Promise<Card> {
     return this.queryBus.execute(
       new GetCardQuery(id)
+    );
+  }
+
+  deleteCard(id: number): Promise<void> {
+    return this.commandBus.execute(
+      new DeleteCardCommand(id)
     );
   }
 }

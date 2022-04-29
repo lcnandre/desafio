@@ -9,6 +9,7 @@ import { CardService } from '../services/card.service';
 import { CardController } from '../../io/controllers/card/card.controller';
 import { CreateCardHandler } from '../../domain/use-cases/card/create-card';
 import { GetCardHandler } from '../../domain/use-cases/card/get-card';
+import { DeleteCardHandler } from '../../domain/use-cases/card/dete-card';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { GetCardHandler } from '../../domain/use-cases/card/get-card';
     CardService,
     CreateCardHandler,
     GetCardHandler,
+    DeleteCardHandler,
   ],
   controllers: [CardController],
   exports: [CqrsModule],

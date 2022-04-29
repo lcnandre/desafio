@@ -12,6 +12,7 @@ import { Card } from '../../domain/entities/card';
 import { CardTable } from '../../io/database/card.table';
 import { CreateCardHandler } from '../../domain/use-cases/card/create-card';
 import { GetCardHandler } from '../../domain/use-cases/card/get-card';
+import { DeleteCardHandler } from '../../domain/use-cases/card/dete-card';
 
 describe('CardService', () => {
   let app: INestApplication;
@@ -19,6 +20,7 @@ describe('CardService', () => {
   let repository: Repository<Card>;
   let tagRepository: Repository<Tag>;
   let card: Card;
+  let cardToDelete: Card;
   let initialTags: Tag[] = [];
 
   beforeAll(async () => {
@@ -36,6 +38,7 @@ describe('CardService', () => {
         },
         CreateCardHandler,
         GetCardHandler,
+        DeleteCardHandler,
       ],
     }).compile();
 
@@ -46,6 +49,7 @@ describe('CardService', () => {
     initialTags.push(await tagRepository.save(new Tag('tag-1')));
     initialTags.push(await tagRepository.save(new Tag('tag-2')));
     card = await repository.save(new Card('Test card', initialTags));
+    cardToDelete = await repository.save(new Card('Delete this card', initialTags));
 
     app = module.createNestApplication();
     await app.init();
@@ -63,5 +67,11 @@ describe('CardService', () => {
     const result = await service.getCard(card.id);
     expect(result).toBeDefined();
     expect(result).toBeInstanceOf(Card);
+  });
+
+  it('Should delete an existing card', async () => {
+    await service.deleteCard(cardToDelete.id);
+    const result = await repository.findOne({ where: { id: cardToDelete.id }});
+    expect(result).toBeNull();
   });
 });

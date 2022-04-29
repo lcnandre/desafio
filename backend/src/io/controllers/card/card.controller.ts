@@ -1,4 +1,4 @@
-import { Body, Controller,Get,Param,Post } from '@nestjs/common';
+import { Body, Controller,Delete,Get,Param,Post } from '@nestjs/common';
 import { ApiCreatedResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { CardService } from '../../../application/services/card.service';
@@ -18,10 +18,16 @@ export class CardController {
   }
 
   @Get('/:id')
-  @ApiParam({name: 'id', example: 1 })
+  @ApiParam({ name: 'id', example: 1 })
   @ApiCreatedResponse({ type: CardDto})
   async getCard(@Param('id') id: number): Promise<CardDto> {
     const tag = await this.service.getCard(id);
     return CardDto.fromCard(tag);
+  }
+
+  @Delete('/:id')
+  @ApiParam({ name: 'id', example: 1})
+  deleteCard(@Param('id') id: number): Promise<void> {
+    return this.service.deleteCard(id);
   }
 }
