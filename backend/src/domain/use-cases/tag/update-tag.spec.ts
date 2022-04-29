@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -38,6 +38,12 @@ describe('Update tag (use case)', () => {
     await expect(updateTag(-1, null))
       .rejects
       .toThrow(NotFoundException);
+  });
+
+  it('Should throw BadRequestException without a valid name', async () => {
+    await expect(updateTag(originalTag.id, new Tag(undefined)))
+      .rejects
+      .toThrow(BadRequestException);
   });
 
   const updateTag = (id: number, tag: Tag): Promise<Tag> => {

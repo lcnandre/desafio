@@ -1,6 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
+import { validate } from 'class-validator';
 import { Repository } from 'typeorm';
 
 import { Tag } from '../../../domain/entities/tag';
@@ -27,6 +28,12 @@ export class UpdateTagHandler implements ICommandHandler<UpdateTagCommand> {
     }
 
     this.repository.merge(currentTag, tag);
+    const errors = await validate(currentTag);
+
+    if (errors && errors.length) {
+      throw new BadRequestException(errors.join(','));
+    }
+
     return this.repository.save(currentTag);
   }
 }
