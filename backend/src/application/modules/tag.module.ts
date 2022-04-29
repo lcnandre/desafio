@@ -5,8 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { TagTable } from '../../io/database/tag.table';
 import { TagService } from '../services/tag.service';
-import { CreateTagHandler } from '../../domain/use-cases/tag/create-tag';
 import { TagController } from '../../io/controllers/tag/tag.controller';
+import { CreateTagHandler } from '../../domain/use-cases/tag/create-tag';
+import { GetTagHandler } from '../../domain/use-cases/tag/get-tag';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TagController } from '../../io/controllers/tag/tag.controller';
   providers: [
     TagService,
     CreateTagHandler,
+    GetTagHandler,
   ],
   controllers: [TagController],
   exports: [CqrsModule],

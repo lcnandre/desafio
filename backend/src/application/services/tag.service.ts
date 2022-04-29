@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateTagCommand } from '../../domain/use-cases/tag/create-tag';
 
 import { Tag } from '../../domain/entities/tag';
+import { CreateTagCommand } from '../../domain/use-cases/tag/create-tag';
+import { GetTagQuery } from '../../domain/use-cases/tag/get-tag';
 
 @Injectable()
 export class TagService {
@@ -14,6 +15,12 @@ export class TagService {
   createTag(name: string): Promise<Tag> {
     return this.commandBus.execute(
       new CreateTagCommand(name)
+    );
+  }
+
+  getTag(id: number): Promise<Tag> {
+    return this.queryBus.execute(
+      new GetTagQuery(id)
     );
   }
 }
