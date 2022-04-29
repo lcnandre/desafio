@@ -9,13 +9,19 @@ import { Tag } from '../src/domain/entities/tag';
 import { TagTable } from '../src/io/database/tag.table';
 import { CreateTagDto } from '../src/io/controllers/tag/dtos/create-tag.dto';
 import { TagDto } from '../src/io/controllers/tag/dtos/tag.dto';
+import { Card } from '../src/domain/entities/card';
+import { CardTable } from '../src/io/database/card.table';
+import { CreateCardDto } from '../src/io/controllers/card/dtos/create-card.dto';
+import { CardDto } from '../src/io/controllers/card/dtos/card.dto';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
-  let repository: Repository<Tag>;
+  let cardRepository: Repository<Card>;
+  let tagRepository: Repository<Tag>;
   let tag: Tag;
   let tagToDelete: Tag;
   let tagToUpdate: Tag;
+  let initialTags: Tag[] = [];
 
   beforeAll(async () => {
     process.env.TYPEORM_CONNECTION = 'sqlite';
@@ -25,10 +31,14 @@ describe('AppController (e2e)', () => {
       imports: [AppModule],
     }).compile();
 
-    repository = moduleFixture.get<Repository<Tag>>(getRepositoryToken(TagTable));
-    tag = await repository.save(new Tag('test-tag'));
-    tagToDelete = await repository.save(new Tag('delete-tag'));
-    tagToUpdate = await repository.save(new Tag('update-this-tag'));
+    tagRepository = moduleFixture.get<Repository<Tag>>(getRepositoryToken(TagTable));
+    tag = await tagRepository.save(new Tag('test-tag'));
+    tagToDelete = await tagRepository.save(new Tag('delete-tag'));
+    tagToUpdate = await tagRepository.save(new Tag('update-this-tag'));
+
+    cardRepository = moduleFixture.get<Repository<Card>>(getRepositoryToken(CardTable));
+    initialTags.push(await tagRepository.save(new Tag('tag-1')));
+    initialTags.push(await tagRepository.save(new Tag('tag-2')));
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -80,10 +90,30 @@ describe('AppController (e2e)', () => {
       });
   });
 
+  it('/cards/ (POST)', () => {
+    const payload = { text: 'Test card', tagIds: initialTags.map(t => t.id) } as CreateCardDto;
+
+    return request(app.getHttpServer())
+      .post('/cards')
+      .type('json')
+      .send(payload)
+      .expect(HttpStatus.CREATED)
+      .then(checkCardDtoResponse);
+  });
+
   const checkTagDtoResponse = (res: any): void => {
     const result = res.body as TagDto;
     expect(result).toBeDefined();
     expect(result.id).toBeDefined();
     expect(result.name).toBeDefined();
+  }
+
+  const checkCardDtoResponse = (res: any): void => {
+    const result = res.body as CardDto;
+    expect(result).toBeDefined();
+    expect(result.id).toBeDefined();
+    expect(result.text).toBeDefined();
+    expect(result.tags).toBeDefined();
+    expect(result.tags.length).toBeGreaterThan(0);
   }
 });
