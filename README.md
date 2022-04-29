@@ -1,90 +1,72 @@
-## Desafio
+# Insights
 
-Precisamos desenvolver uma ferramenta para criação de Cards de conteúdo esportivos (Insights).
+This is the repository for the Insights App.
+The app lets users create and tag insights as well as reading insights from other users.
 
-### 1. Interace HTTP REST API
+## Features
 
-Ações da API
+- Show the latest insights
+- Filter insights by tags
+- Write a new insight
+- Update an existing insight
+- Create tags
+- Find tags by name
+- Update an existing tag
+- Remove insights and tags
 
-- Criar card
-- Ler card
-- Remover card
-- Atualizar card
-- Listar card
-  - Filtrar por tags
+## Tech
 
-Um card possui os campos: 
+The app was created using:
+- Node: backend Javascript runtime
+- Express: a fastp HTTP framework for Node
+- Typescript: Javascript with static typing, similar to C# or Java
+- NestJS: a progressive, unopinionated framework for Node apps
+- TypeORM: an ORM for TS similar to Hibernate and Entity Framework
+- SQLite: a small self-contained database engine for development environment
+- Swagger: a tool for documenting and interacting with web APIs
+- React: a frontend Javascript framework
+- Expo: a mobile framework for building apps for iOS & Android using React
+
+Apart from the tech stack, the following development principles where followed:
+
+- TDD: the tests were written first, then the production code to make the tests pass were written. The project has 100% code coverage
+- DDD: the domain is well bounded between the contexts of Users and Posts. Also, the project uses well-known DDD blocks, such as Entities, Repositories, Value Objects, etc.
+- Clean architecture: the project has three well defined layers and all dependencies point upwards from the entities:
+    - Domain: where entities and use cases goes
+    - Application: where all application specific code goes, such as modules, services, interceptors
+    - IO: where all input and output is done, such as HTTP controllers and database mappings
+- CQRS: all actions on the app are use cases that are either commands or queries
+- SOLID: the code is very clean and respect as much as possible the SOLID principles
+
+## Requirements
+
+Posterr requires [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) to run.
+
+## Running the app
+
+Install the dependencies for both the frontend and backend, then use the start script
+
+```sh
+cd backend && yarn && yarn start
 ```
-{
-  "id": // identificador
-  "texto" // texto do card
-  "data_criacao" // data da criação do card
-  "data_modificacao" // data da última alteração do card
-  "tags" // tags vinculas ao card
-}
+
+```sh
+cd frontend && yarn && yarn web
 ```
 
-- Criar Tag
-- Ler Tag
-- Remover Tag
-- Atualizar Tag
+After running, the API will be available at http://localhost:3000 and the UI will be available at http://localhost:19006.
 
-```
-Uma tag possui os campos:
-{
-  "id" // identificador
-  "name" // nome da tag
-}
+To run the backend unit tests with coverage report:
+```sh
+cd backend && yarn test:cov
 ```
 
-Temos uma estimativa de milhares de criações de cards diariamente. A preocupação com performance será avaliada.
+After the tests where ran, the interactive coverage report will be available at `backend/coverage/lcov-report/index.html`.
 
-### 2. CLI para importação dos card
+To run the backend E2E tests:
 
-Necessitamos importar os conteúdos do nosso sistema de dados esportivos para gerar nossos cards e precisamos de uma ferramenta para auxiliar essa tarefa.
-
-
-Dado um csv de "cards", faça um CLI (Command Line Interface) que importe os dados para o Insights.
-
-CSV exemplo:
-
+```sh
+cd backend && yarn test:e2e
 ```
-text,tag
-Lorem ipsum dolor sit amet., tag1;tag2;tag3
-Mauris fringilla non quam vel lacinia,tag3
-Cras in tempus libero,
-```
-### 3. Interface WEB
 
-Após termos nossa api desenvolvida, precisamos viabilizar uma interface frontend para nossos usuários interagirem.
-
-Nosso time de UX desenhou as [telas](https://www.sketch.com/s/3f91077d-21c0-4040-8fae-b89d69809d9b) e disponibilizou para você!
-
-Dê preferência aos frameworks como o Vuetify para aproveitar os componentes já prontos.
-
-Clique no box com o botão de play para entrar no modo de navegação com os hotspots que indicam o fluxo.
-
-Clique em cada uma das telas e utilize a funcionalidade de "Inspector" para ter acesso ao guia de css.
-
-Os ícones utilizados no projeto são do [Material Design](https://material.io/resources/icons/?style=baseline)
-
-Utilize o botão "Download Assets" para baixar a marca do produto Insights.
-
-
-### Requerimentos:
-- Linguagens de programação backend:
-  - Python
-  - NodeJs
-  - C#
-- Framework frontend
-  - VueJS
-  - ReactJS
-  - Angular
-- Fidelidade de layout
-- Code Style
-- Teste unitário
-- Documentação
-  - Descrição
-  - Como rodar
-  - API DOC (openapi/swagger)
-
+The E2E tests simulates an HTTP client (such as Postman) making requests to the app and asserting the responses.
