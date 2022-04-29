@@ -11,12 +11,14 @@ import { TagTable } from '../../io/database/tag.table';
 import { Card } from '../../domain/entities/card';
 import { CardTable } from '../../io/database/card.table';
 import { CreateCardHandler } from '../../domain/use-cases/card/create-card';
+import { GetCardHandler } from '../../domain/use-cases/card/get-card';
 
 describe('CardService', () => {
   let app: INestApplication;
   let service: CardService;
   let repository: Repository<Card>;
   let tagRepository: Repository<Tag>;
+  let card: Card;
   let initialTags: Tag[] = [];
 
   beforeAll(async () => {
@@ -33,6 +35,7 @@ describe('CardService', () => {
           useValue: createMockRepository<Card>(Card),
         },
         CreateCardHandler,
+        GetCardHandler,
       ],
     }).compile();
 
@@ -42,6 +45,7 @@ describe('CardService', () => {
 
     initialTags.push(await tagRepository.save(new Tag('tag-1')));
     initialTags.push(await tagRepository.save(new Tag('tag-2')));
+    card = await repository.save(new Card('Test card', initialTags));
 
     app = module.createNestApplication();
     await app.init();
@@ -53,5 +57,11 @@ describe('CardService', () => {
     expect(result.id).toBeGreaterThan(0);
     expect(result.text).toBe('Test card');
     expect(result.tags.map(t => t.id)).toStrictEqual(initialTags.map(t => t.id));
+  });
+
+  it('Should fetch an existing card', async () => {
+    const result = await service.getCard(card.id);
+    expect(result).toBeDefined();
+    expect(result).toBeInstanceOf(Card);
   });
 });

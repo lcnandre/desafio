@@ -24,7 +24,7 @@ export class CardDto {
     return {
       id: card.id,
       creationTime: moment(card.creationTime).tz('America/Sao_Paulo').format('DD/MM/YYYY h:mm:ss'),
-      updatedTime: moment(card.updatedTime).tz('America/Sao_Paulo').format('DD/MM/YYYY h:mm:ss'),
+      updatedTime: card.updatedTime ? moment(card.updatedTime).tz('America/Sao_Paulo').format('DD/MM/YYYY h:mm:ss') : undefined,
       text: card.text,
       tags: card.tags.map(t => TagDto.fromTag(t)),
     } as CardDto;

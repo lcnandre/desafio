@@ -22,6 +22,7 @@ describe('AppController (e2e)', () => {
   let tagToDelete: Tag;
   let tagToUpdate: Tag;
   let initialTags: Tag[] = [];
+  let card: Card;
 
   beforeAll(async () => {
     process.env.TYPEORM_CONNECTION = 'sqlite';
@@ -39,6 +40,7 @@ describe('AppController (e2e)', () => {
     cardRepository = moduleFixture.get<Repository<Card>>(getRepositoryToken(CardTable));
     initialTags.push(await tagRepository.save(new Tag('tag-1')));
     initialTags.push(await tagRepository.save(new Tag('tag-2')));
+    card = await cardRepository.save(new Card('Test card', initialTags));
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -98,6 +100,13 @@ describe('AppController (e2e)', () => {
       .type('json')
       .send(payload)
       .expect(HttpStatus.CREATED)
+      .then(checkCardDtoResponse);
+  });
+
+  it('/cards/ (GET)', () => {
+    return request(app.getHttpServer())
+      .get(`/cards/${card.id}`)
+      .expect(HttpStatus.OK)
       .then(checkCardDtoResponse);
   });
 

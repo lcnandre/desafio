@@ -13,6 +13,7 @@ import { Card } from '../../../domain/entities/card';
 import { CardTable } from '../../../io/database/card.table';
 import { CreateCardDto } from './dtos/create-card.dto';
 import { CreateCardHandler } from '../../../domain/use-cases/card/create-card';
+import { GetCardHandler } from '../../../domain/use-cases/card/get-card';
 
 describe('CardController', () => {
   let app: INestApplication;
@@ -20,6 +21,7 @@ describe('CardController', () => {
   let repository: Repository<Card>;
   let tagRepository: Repository<Tag>;
   let initialTags: Tag[] = [];
+  let card: Card;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -36,6 +38,7 @@ describe('CardController', () => {
           useValue: createMockRepository<Card>(Card),
         },
         CreateCardHandler,
+        GetCardHandler,
       ],
     }).compile();
 
@@ -45,6 +48,7 @@ describe('CardController', () => {
 
     initialTags.push(await tagRepository.save(new Tag('tag-1')));
     initialTags.push(await tagRepository.save(new Tag('tag-2')));
+    card = await repository.save(new Card('Test card', initialTags));
 
     app = module.createNestApplication();
     await app.init();
@@ -58,5 +62,10 @@ describe('CardController', () => {
     expect(result.id).toBeGreaterThan(0)
     expect(result.text).toBe('Test card');
     expect(result.tags.map(t => t.id)).toStrictEqual(initialTags.map(t => t.id));
+  });
+
+  it('Should fetch an existing card', async () => {
+    const result = await controller.getCard(card.id);
+    expect(result).toBeDefined();
   });
 });
