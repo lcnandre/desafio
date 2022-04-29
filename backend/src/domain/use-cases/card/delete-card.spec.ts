@@ -8,7 +8,7 @@ import { Tag } from '../../../domain/entities/tag';
 import { TagTable } from '../../../io/database/tag.table';
 import { Card } from '../../../domain/entities/card';
 import { CardTable } from '../../../io/database/card.table';
-import { DeleteCardCommand, DeleteCardHandler } from './dete-card';
+import { DeleteCardCommand, DeleteCardHandler } from './delete-card';
 
 describe('Delete card (use case)', () => {
   let repository: Repository<Card>;

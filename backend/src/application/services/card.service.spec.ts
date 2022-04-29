@@ -12,7 +12,7 @@ import { Card } from '../../domain/entities/card';
 import { CardTable } from '../../io/database/card.table';
 import { CreateCardHandler } from '../../domain/use-cases/card/create-card';
 import { GetCardHandler } from '../../domain/use-cases/card/get-card';
-import { DeleteCardHandler } from '../../domain/use-cases/card/dete-card';
+import { DeleteCardHandler } from '../../domain/use-cases/card/delete-card';
 
 describe('CardService', () => {
   let app: INestApplication;

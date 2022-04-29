@@ -4,7 +4,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Card } from '../../domain/entities/card';
 import { CreateCardCommand } from '../../domain/use-cases/card/create-card';
 import { GetCardQuery } from '../../domain/use-cases/card/get-card';
-import { DeleteCardCommand } from '../../domain/use-cases/card/dete-card';
+import { DeleteCardCommand } from '../../domain/use-cases/card/delete-card';
 
 @Injectable()
 export class CardService {

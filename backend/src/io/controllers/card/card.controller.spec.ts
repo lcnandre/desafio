@@ -22,6 +22,7 @@ describe('CardController', () => {
   let tagRepository: Repository<Tag>;
   let initialTags: Tag[] = [];
   let card: Card;
+  let cardToDelete: Card;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -49,6 +50,7 @@ describe('CardController', () => {
     initialTags.push(await tagRepository.save(new Tag('tag-1')));
     initialTags.push(await tagRepository.save(new Tag('tag-2')));
     card = await repository.save(new Card('Test card', initialTags));
+    cardToDelete = await repository.save(new Card('Delete this card', initialTags));
 
     app = module.createNestApplication();
     await app.init();
@@ -67,5 +69,11 @@ describe('CardController', () => {
   it('Should fetch an existing card', async () => {
     const result = await controller.getCard(card.id);
     expect(result).toBeDefined();
+  });
+
+  it('Should delete an existing card', async () => {
+    await controller.deleteCard(cardToDelete.id);
+    const result = await repository.findOne({ where: { id: cardToDelete.id }});
+    expect(result).toBeNull();
   });
 });

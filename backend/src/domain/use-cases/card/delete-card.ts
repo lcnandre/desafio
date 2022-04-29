@@ -3,7 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Card } from '../../../domain/entities/card';
+import { Card } from '../../entities/card';
 import { CardTable } from '../../../io/database/card.table';
 
 export class DeleteCardCommand {
