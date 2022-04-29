@@ -4,7 +4,6 @@ import { ApiCreatedResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { TagService } from '../../../application/services/tag.service';
 import { CreateTagDto } from './dtos/create-tag.dto';
 import { TagDto } from './dtos/tag.dto';
-import { Tag } from '../../../domain/entities/tag';
 
 @ApiTags('tags')
 @Controller('tags')
@@ -36,8 +35,7 @@ export class TagController {
   @ApiParam({ name: 'id', example: 1 })
   @ApiCreatedResponse({ type: TagDto })
   async updateTag(@Param('id') id: number, @Body() dto: CreateTagDto) {
-    let tag = new Tag(dto.name);
-    tag = await this.service.updateTag(id, tag);
+    const tag = await this.service.updateTag(id, dto.name);
     return TagDto.fromTag(tag);
   }
 }

@@ -27,7 +27,7 @@ describe('Update tag (use case)', () => {
   });
 
   it('Should update an existing tag', async () => {
-    await updateTag(originalTag.id, new Tag('updated-tag'));
+    await updateTag(originalTag.id, 'updated-tag');
     const result = await fetchTag(originalTag.id);
     expect(result).toBeDefined();
     expect(result.id).toBe(originalTag.id);
@@ -41,13 +41,13 @@ describe('Update tag (use case)', () => {
   });
 
   it('Should throw BadRequestException without a valid name', async () => {
-    await expect(updateTag(originalTag.id, new Tag(undefined)))
+    await expect(updateTag(originalTag.id, undefined))
       .rejects
       .toThrow(BadRequestException);
   });
 
-  const updateTag = (id: number, tag: Tag): Promise<Tag> => {
-    const query = new UpdateTagCommand(id, tag);
+  const updateTag = (id: number, name: string): Promise<Tag> => {
+    const query = new UpdateTagCommand(id, name);
     const handler = new UpdateTagHandler(repository);
 
     return handler.execute(query);

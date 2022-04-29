@@ -24,6 +24,7 @@ describe('AppController (e2e)', () => {
   let initialTags: Tag[] = [];
   let card: Card;
   let cardToDelete: Card;
+  let cardToUpdate: Card;
 
   beforeAll(async () => {
     process.env.TYPEORM_CONNECTION = 'sqlite';
@@ -43,6 +44,7 @@ describe('AppController (e2e)', () => {
     initialTags.push(await tagRepository.save(new Tag('tag-2')));
     card = await cardRepository.save(new Card('Test card', initialTags));
     cardToDelete = await cardRepository.save(new Card('Delete this card', initialTags));
+    cardToUpdate = await cardRepository.save(new Card('Update this card', initialTags));
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -116,6 +118,23 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/cards/${cardToDelete.id}`)
       .expect(HttpStatus.OK);
+  });
+
+  it('/cards/ (PATCH)', () => {
+    const payload = { text: 'Updated card', tagIds: [initialTags[0].id] } as CreateCardDto;
+
+    return request(app.getHttpServer())
+      .patch(`/cards/${tagToUpdate.id}`)
+      .type('json')
+      .send(payload)
+      .expect(HttpStatus.OK)
+      .then((res) => {
+        const result = res.body as CardDto;
+        expect(result).toBeDefined();
+        expect(result.id).toBe(cardToUpdate.id);
+        expect(result.text).toBe('Updated card');
+        expect(result.tags.map(t => t.id)).toStrictEqual([initialTags[0].id]);
+      });
   });
 
   const checkTagDtoResponse = (res: any): void => {

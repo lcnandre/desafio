@@ -10,7 +10,7 @@ import { TagTable } from '../../../io/database/tag.table';
 export class UpdateTagCommand {
   constructor(
     public readonly id: number,
-    public readonly tag: Tag
+    public readonly name: string,
   ) { }
 }
 
@@ -19,7 +19,7 @@ export class UpdateTagHandler implements ICommandHandler<UpdateTagCommand> {
   constructor(@InjectRepository(TagTable) private readonly repository: Repository<Tag>) { }
 
   async execute(command: UpdateTagCommand): Promise<Tag> {
-    const { id, tag } = command;
+    const { id, name } = command;
 
     let currentTag = await this.repository.findOne({ where: { id } });
 
@@ -27,7 +27,7 @@ export class UpdateTagHandler implements ICommandHandler<UpdateTagCommand> {
       throw new NotFoundException('Tag não encontrada');
     }
 
-    this.repository.merge(currentTag, tag);
+    this.repository.merge(currentTag, new Tag(name));
     const errors = await validate(currentTag);
 
     if (errors && errors.length) {

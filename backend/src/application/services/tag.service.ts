@@ -32,9 +32,9 @@ export class TagService {
     );
   }
 
-  updateTag(id: number, tag: Tag): Promise<Tag> {
+  updateTag(id: number, name: string): Promise<Tag> {
     return this.commandBus.execute(
-      new UpdateTagCommand(id, tag)
+      new UpdateTagCommand(id, name)
     );
   }
 }

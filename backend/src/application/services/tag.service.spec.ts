@@ -68,7 +68,7 @@ describe('TagService', () => {
   });
 
   it('Should update an existing tag', async () => {
-    await service.updateTag(tagToUpdate.id, new Tag('updated-tag'));
+    await service.updateTag(tagToUpdate.id, 'updated-tag');
     const result = await repository.findOne({ where: { id: tagToUpdate.id }});
     expect(result).toBeDefined();
     expect(result.id).toBe(tagToUpdate.id);
