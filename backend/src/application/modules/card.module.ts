@@ -11,6 +11,7 @@ import { CreateCardHandler } from '../../domain/use-cases/card/create-card';
 import { GetCardHandler } from '../../domain/use-cases/card/get-card';
 import { DeleteCardHandler } from '../../domain/use-cases/card/delete-card';
 import { UpdateCardHandler } from '../../domain/use-cases/card/update-card';
+import { ListCardsHandler } from '../../domain/use-cases/card/list-cards';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { UpdateCardHandler } from '../../domain/use-cases/card/update-card';
     GetCardHandler,
     DeleteCardHandler,
     UpdateCardHandler,
+    ListCardsHandler,
   ],
   controllers: [CardController],
   exports: [CqrsModule],

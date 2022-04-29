@@ -16,6 +16,7 @@ import { CreateCardHandler } from '../../../domain/use-cases/card/create-card';
 import { GetCardHandler } from '../../../domain/use-cases/card/get-card';
 import { DeleteCardHandler } from '../../../domain/use-cases/card/delete-card';
 import { UpdateCardHandler } from '../../../domain/use-cases/card/update-card';
+import { ListCardsHandler } from '../../../domain/use-cases/card/list-cards';
 
 describe('CardController', () => {
   let app: INestApplication;
@@ -45,6 +46,7 @@ describe('CardController', () => {
         GetCardHandler,
         DeleteCardHandler,
         UpdateCardHandler,
+        ListCardsHandler,
       ],
     }).compile();
 
@@ -92,5 +94,12 @@ describe('CardController', () => {
     expect(result.text).toBe('Updated card');
     expect(result.tags.map(t => t.id)).toStrictEqual([initialTags[0].id]);
     expect(result.updatedTime).toBeDefined();
+  });
+
+  it('Should list cards', async () => {
+    const result = await controller.listCards(1, 4);
+    expect(result).toBeDefined();
+    expect(result).toBeInstanceOf(Array);
+    expect(result.length).toBe(3);
   });
 });

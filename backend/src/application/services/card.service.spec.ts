@@ -14,6 +14,7 @@ import { CreateCardHandler } from '../../domain/use-cases/card/create-card';
 import { GetCardHandler } from '../../domain/use-cases/card/get-card';
 import { DeleteCardHandler } from '../../domain/use-cases/card/delete-card';
 import { UpdateCardHandler } from '../../domain/use-cases/card/update-card';
+import { ListCardsHandler } from '../../domain/use-cases/card/list-cards';
 
 describe('CardService', () => {
   let app: INestApplication;
@@ -42,6 +43,7 @@ describe('CardService', () => {
         GetCardHandler,
         DeleteCardHandler,
         UpdateCardHandler,
+        ListCardsHandler,
       ],
     }).compile();
 
@@ -86,5 +88,12 @@ describe('CardService', () => {
     expect(result.id).toBe(cardToUpdate.id);
     expect(result.text).toBe('Updated card');
     expect(result.tags.map(t => t.id)).toStrictEqual([initialTags[0].id]);
+  });
+
+  it('Should list cards', async () => {
+    const result = await service.listCards(1, 4);
+    expect(result).toBeDefined();
+    expect(result).toBeInstanceOf(Array);
+    expect(result.length).toBe(3);
   });
 });

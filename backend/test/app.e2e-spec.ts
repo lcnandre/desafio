@@ -109,6 +109,19 @@ describe('AppController (e2e)', () => {
 
   it('/cards/ (GET)', () => {
     return request(app.getHttpServer())
+      .get('/cards')
+      .query({ page: 1, tagIds: [initialTags[0].id] })
+      .expect(HttpStatus.OK)
+      .then(res => {
+        const result = res.body as CardDto[];
+        expect(result).toBeDefined();
+        expect(result).toBeInstanceOf(Array);
+        expect(result.length).toBeGreaterThan(0);
+      });
+  });
+
+  it('/cards/:id (GET)', () => {
+    return request(app.getHttpServer())
       .get(`/cards/${card.id}`)
       .expect(HttpStatus.OK)
       .then(checkCardDtoResponse);

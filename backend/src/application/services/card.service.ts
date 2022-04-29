@@ -6,6 +6,7 @@ import { CreateCardCommand } from '../../domain/use-cases/card/create-card';
 import { GetCardQuery } from '../../domain/use-cases/card/get-card';
 import { DeleteCardCommand } from '../../domain/use-cases/card/delete-card';
 import { UpdateCardCommand } from '../../domain/use-cases/card/update-card';
+import { ListCardsQuery } from '../../domain/use-cases/card/list-cards';
 
 @Injectable()
 export class CardService {
@@ -35,6 +36,12 @@ export class CardService {
   updateCard(id: number, text: string, tagIds: number[]): Promise<Card> {
     return this.commandBus.execute(
       new UpdateCardCommand(id, text, tagIds)
+    );
+  }
+
+  listCards(page: number, pageSize: number, tagIds?: number[]): Promise<Card[]> {
+    return this.queryBus.execute(
+      new ListCardsQuery(page, pageSize, tagIds)
     );
   }
 }

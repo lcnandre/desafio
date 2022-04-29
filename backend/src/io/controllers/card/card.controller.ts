@@ -1,5 +1,5 @@
-import { Body, Controller,Delete,Get,Param,Patch,Post } from '@nestjs/common';
-import { ApiCreatedResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Body, Controller,Delete,Get,Param,Patch,Post, Query } from '@nestjs/common';
+import { ApiCreatedResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 import { CardService } from '../../../application/services/card.service';
 import { CardDto } from './dtos/card.dto';
@@ -37,5 +37,27 @@ export class CardController {
   async updateCard(@Param('id') id: number, @Body() dto: CreateCardDto) {
     const card = await this.service.updateCard(id, dto.text, dto.tagIds);
     return CardDto.fromCard(card);
+  }
+
+  @Get('/')
+  @ApiQuery({ name: 'page', example: '1' })
+  @ApiQuery({ name: 'pageSize', example: '4', required: false })
+  @ApiQuery({ name: 'tagIds', example: '1,2' })
+  @ApiCreatedResponse({ type: CardDto, isArray: true })
+  async listCards(@Query('page') page: number, @Query('pageSize') pageSize?: number, @Query('tagIds') tagIds?: undefined | number | number[]): Promise<CardDto[]> {
+    const result = await this.service.listCards(+page, +(pageSize | 4), this.getTagIds(tagIds));
+    return result.map(CardDto.fromCard);
+  }
+
+  private getTagIds(tagIds?: undefined | number | number[]): number[] | undefined {
+    if (!!!tagIds) {
+      return undefined;
+    }
+
+    if (Array.isArray(tagIds)) {
+      return tagIds.map(t => +t);
+    }
+
+    return [+tagIds];
   }
 }

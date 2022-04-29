@@ -109,7 +109,9 @@ class MockRepository<T> {
         }
         switch(params[key]._type) {
           case 'in':
-            return params[key]._value.includes(data[key]);
+            return Array.isArray(data)
+              ? !!data.find(d => params[key]._value.includes(d[Object.keys(params)[0]]))
+              : params[key]._value.includes(data[key]);
           case 'like':
             return data[key] && data[key].length && data[key].includes(params[key]._value.toString().replace(/\%/g, ''));
           case 'between':
