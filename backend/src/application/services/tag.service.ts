@@ -5,6 +5,7 @@ import { Tag } from '../../domain/entities/tag';
 import { CreateTagCommand } from '../../domain/use-cases/tag/create-tag';
 import { GetTagQuery } from '../../domain/use-cases/tag/get-tag';
 import { DeleteTagCommand } from '../../domain/use-cases/tag/delete-tag';
+import { UpdateTagCommand } from '../../domain/use-cases/tag/update-tag';
 
 @Injectable()
 export class TagService {
@@ -28,6 +29,12 @@ export class TagService {
   deleteTag(id: number): Promise<void> {
     return this.commandBus.execute(
       new DeleteTagCommand(id)
+    );
+  }
+
+  updateTag(id: number, tag: Tag): Promise<Tag> {
+    return this.commandBus.execute(
+      new UpdateTagCommand(id, tag)
     );
   }
 }

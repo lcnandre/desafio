@@ -9,6 +9,7 @@ import { TagController } from '../../io/controllers/tag/tag.controller';
 import { CreateTagHandler } from '../../domain/use-cases/tag/create-tag';
 import { GetTagHandler } from '../../domain/use-cases/tag/get-tag';
 import { DeleteTagHandler } from '../../domain/use-cases/tag/delete-tag';
+import { UpdateTagHandler } from '../../domain/use-cases/tag/update-tag';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DeleteTagHandler } from '../../domain/use-cases/tag/delete-tag';
     CreateTagHandler,
     GetTagHandler,
     DeleteTagHandler,
+    UpdateTagHandler,
   ],
   controllers: [TagController],
   exports: [CqrsModule],

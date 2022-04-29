@@ -11,6 +11,7 @@ import { TagTable } from '../../io/database/tag.table';
 import { CreateTagHandler } from '../../domain/use-cases/tag/create-tag';
 import { GetTagHandler } from '../../domain/use-cases/tag/get-tag';
 import { DeleteTagHandler } from '../../domain/use-cases/tag/delete-tag';
+import { UpdateTagHandler } from '../../domain/use-cases/tag/update-tag';
 
 describe('TagService', () => {
   let app: INestApplication;
@@ -18,6 +19,7 @@ describe('TagService', () => {
   let repository: Repository<Tag>;
   let tag: Tag;
   let tagToDelete: Tag;
+  let tagToUpdate: Tag;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -31,6 +33,7 @@ describe('TagService', () => {
         CreateTagHandler,
         GetTagHandler,
         DeleteTagHandler,
+        UpdateTagHandler,
       ],
     }).compile();
 
@@ -38,6 +41,7 @@ describe('TagService', () => {
     repository = module.get<Repository<Tag>>(getRepositoryToken(TagTable));
     tag = await repository.save(new Tag('test-tag'));
     tagToDelete = await repository.save(new Tag('delete-tag'));
+    tagToUpdate = await repository.save(new Tag('update-this-tag'));
 
     app = module.createNestApplication();
     await app.init();
@@ -61,5 +65,13 @@ describe('TagService', () => {
     await service.deleteTag(tagToDelete.id);
     const result = await repository.findOne({ where: { id: tagToDelete.id }});
     expect(result).toBeNull();
+  });
+
+  it('Should update an existing tag', async () => {
+    await service.updateTag(tagToUpdate.id, new Tag('updated-tag'));
+    const result = await repository.findOne({ where: { id: tagToUpdate.id }});
+    expect(result).toBeDefined();
+    expect(result.id).toBe(tagToUpdate.id);
+    expect(result.name).toBe('updated-tag');
   });
 });

@@ -15,6 +15,7 @@ describe('AppController (e2e)', () => {
   let repository: Repository<Tag>;
   let tag: Tag;
   let tagToDelete: Tag;
+  let tagToUpdate: Tag;
 
   beforeAll(async () => {
     process.env.TYPEORM_CONNECTION = 'sqlite';
@@ -27,6 +28,7 @@ describe('AppController (e2e)', () => {
     repository = moduleFixture.get<Repository<Tag>>(getRepositoryToken(TagTable));
     tag = await repository.save(new Tag('test-tag'));
     tagToDelete = await repository.save(new Tag('delete-tag'));
+    tagToUpdate = await repository.save(new Tag('update-this-tag'));
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -60,6 +62,22 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/tags/${tagToDelete.id}`)
       .expect(HttpStatus.OK);
+  });
+
+  it('/tags/ (PATCH)', () => {
+    const payload = { name: 'updated-tag' } as CreateTagDto;
+
+    return request(app.getHttpServer())
+      .patch(`/tags/${tagToUpdate.id}`)
+      .type('json')
+      .send(payload)
+      .expect(HttpStatus.OK)
+      .then((res) => {
+        const result = res.body as TagDto;
+        expect(result).toBeDefined();
+        expect(result.id).toBe(tagToUpdate.id);
+        expect(result.name).toBe('updated-tag');
+      });
   });
 
   const checkTagDtoResponse = (res: any): void => {
