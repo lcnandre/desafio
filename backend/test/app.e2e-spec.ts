@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import * as request from 'supertest';
 
@@ -14,6 +14,7 @@ describe('AppController (e2e)', () => {
   let app: INestApplication;
   let repository: Repository<Tag>;
   let tag: Tag;
+  let tagToDelete: Tag;
 
   beforeAll(async () => {
     process.env.TYPEORM_CONNECTION = 'sqlite';
@@ -25,6 +26,7 @@ describe('AppController (e2e)', () => {
 
     repository = moduleFixture.get<Repository<Tag>>(getRepositoryToken(TagTable));
     tag = await repository.save(new Tag('test-tag'));
+    tagToDelete = await repository.save(new Tag('delete-tag'));
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -33,7 +35,7 @@ describe('AppController (e2e)', () => {
   it('/ (GET)', () => {
     return request(app.getHttpServer())
       .get('/')
-      .expect(302);
+      .expect(HttpStatus.FOUND);
   });
 
   it('/tags/ (POST)', () => {
@@ -43,24 +45,27 @@ describe('AppController (e2e)', () => {
       .post('/tags')
       .type('json')
       .send(payload)
-      .expect(201)
-      .then(res => {
-        const result = res.body as TagDto;
-        expect(result).toBeDefined();
-        expect(result.id).toBeDefined();
-        expect(result.name).toBeDefined();
-      });
+      .expect(HttpStatus.CREATED)
+      .then(checkTagDtoResponse);
   });
 
   it('/tags/ (GET)', () => {
     return request(app.getHttpServer())
       .get(`/tags/${tag.id}`)
-      .expect(200)
-      .then(res => {
-        const result = res.body as TagDto;
-        expect(result).toBeDefined();
-        expect(result.id).toBeDefined();
-        expect(result.name).toBeDefined();
-      });
+      .expect(HttpStatus.OK)
+      .then(checkTagDtoResponse);
   });
+
+  it('/tags/ (DELETE)', () => {
+    return request(app.getHttpServer())
+      .delete(`/tags/${tagToDelete.id}`)
+      .expect(HttpStatus.OK);
+  });
+
+  const checkTagDtoResponse = (res: any): void => {
+    const result = res.body as TagDto;
+    expect(result).toBeDefined();
+    expect(result.id).toBeDefined();
+    expect(result.name).toBeDefined();
+  }
 });

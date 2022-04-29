@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 
 import { TagService } from '../../../application/services/tag.service';
@@ -22,5 +22,10 @@ export class TagController {
   async getTag(@Param('id') id: number): Promise<TagDto> {
     const tag = await this.service.getTag(id);
     return TagDto.fromTag(tag);
+  }
+
+  @Delete('/:id')
+  deleteTag(@Param('id') id: number): Promise<void> {
+    return this.service.deleteTag(id);
   }
 }
