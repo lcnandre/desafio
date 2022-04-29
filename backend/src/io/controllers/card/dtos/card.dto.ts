@@ -21,10 +21,6 @@ export class CardDto {
   tags: TagDto[];
 
   static fromCard(card: Card) {
-    if (!!!card) {
-      return undefined;
-    }
-
     return {
       id: card.id,
       creationTime: moment(card.creationTime).tz('America/Sao_Paulo').format('DD/MM/YYYY h:mm:ss'),

@@ -10,10 +10,6 @@ export class TagDto {
   name: string;
 
   static fromTag(tag: Tag) {
-    if (!!!tag) {
-      return undefined;
-    }
-
     return {
       id: tag.id,
       name: tag.name,
