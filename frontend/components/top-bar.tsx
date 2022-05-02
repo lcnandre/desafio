@@ -26,12 +26,14 @@ export default function TopBar() {
 const styles = StyleSheet.create({
   avatar: {
     borderColor: '#ee4c78',
-    borderWidth: 2,
     borderRadius: 64,
+    borderWidth: 2,
+    width: 'auto',
+    height: 'auto'
   },
   logo: {
     width: 60,
-    height: 36,
+    height: 39,
   },
   appBar: {
     height: '294px',
@@ -58,8 +60,9 @@ const styles = StyleSheet.create({
     color: '#ee4c78',
   },
   topBar: {
-    flex: 20,
+    flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
+    left: '-10%'
   },
 });

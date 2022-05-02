@@ -8,7 +8,7 @@ import CardContainer from '../components/card-container';
 
 export default function Feed() {
   return (
-    <View>
+    <View style={{height: '100vh' }}>
       <TopBar></TopBar>
 
       <View style={styles.container}>
@@ -24,6 +24,7 @@ export default function Feed() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    display: 'flex',
     backgroundColor: '#f0f0f0',
     alignItems: 'center',
     justifyContent: 'flex-start',
