@@ -40,7 +40,7 @@ Apart from the tech stack, the following development principles where followed:
 
 ## Requirements
 
-Posterr requires [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) to run.
+The app requires [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) to run.
 
 ## Running the app
 
@@ -70,3 +70,13 @@ cd backend && yarn test:e2e
 ```
 
 The E2E tests simulates an HTTP client (such as Postman) making requests to the app and asserting the responses.
+
+## Critique
+
+Although the SOLID princples were followed as much as possible, I still miss some interfaces on the project to help separate definition from implementation a little more. NestJS's dependency injection system currently doesn't support injecting interfaces, like Castle in .NET or Spring in Java.
+
+The search insights feature is quite simplistic, searching the database using `LIKE %query%`, which is not very performant. The same goes for the tag search. A better solution would be to have the tags on a distributed cache, like Redis for easy access. To proper implement CQRS, the queries should hit Redis, while the writes/delete should hit the SQL database, while updating the Redis cache. For the insights, a proper indexation tool would be benefical like ElasticSearch or even the fulltext search capabilities of some databases, like SQLServer.
+
+Obiously SQLite wasn't designed for production usage, so Postgres could be used instead. Since the code follows the clean architecture, swaping from SQLite to Postgres is just a matter of changing a few environment variables and replacing the libraries (uninstall `sqlite3` and install `pg` through Yarn). Postgres performs very well under high pressure, it's free and highly extendable, making it a great choice for a "startup" app with a lot of users. If the database ever becomes a bottleneck, Postgres can be turned into a cluster with extensions like PgPool or even Citus Data.
+
+The test suite on the backend contains a bunch of duplicated code, which could be turned into a proper test suite toolset, by making test factories or even sharing common structures with related test cases.
