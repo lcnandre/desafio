@@ -52,8 +52,15 @@ describe('List cards (use case)', () => {
     expect(result.length).toBe(1);
   });
 
-  const listCards = (tagIds?: number[]): Promise<Card[]> => {
-    const query = new ListCardsQuery(1, 4, tagIds);
+  it('Should only list cards that contains text with filter', async () => {
+    const result = await listCards(undefined, 'Another');
+    expect(result).toBeDefined();
+    expect(result).toBeInstanceOf(Array);
+    expect(result.length).toBe(1);
+  });
+
+  const listCards = (tagIds?: number[], text?: string): Promise<Card[]> => {
+    const query = new ListCardsQuery(1, 4, tagIds, text);
     const handler = new ListCardsHandler(repository);
 
     return handler.execute(query);
