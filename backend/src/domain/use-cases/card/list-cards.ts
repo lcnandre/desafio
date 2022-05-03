@@ -21,7 +21,7 @@ export class ListCardsHandler implements IQueryHandler<ListCardsQuery> {
     const { page, pageSize, tagIds } = query;
     const queryOptions: FindManyOptions<Card> = {
       take: pageSize,
-      skip: pageSize * page - 1,
+      skip: pageSize * (page - 1),
       select: {
         id: true,
         creationTime: true,

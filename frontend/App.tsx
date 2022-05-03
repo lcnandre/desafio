@@ -1,12 +1,14 @@
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
+import { Provider } from 'react-redux';
 import { createNativeStackNavigator, NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 import FeedTopBar from './components/feed-top-bar';
 import GenericTopBar from './components/generic-top-bar';
 import Feed from './screens/feed';
 import AddInsight from './screens/add-insight';
+import store from './store';
 
 const theme = {
   ...DefaultTheme,
@@ -17,19 +19,21 @@ const theme = {
   },
 };
 
-const Stack = createNativeStackNavigator();
-
 export default function App() {
+  const Stack = createNativeStackNavigator();
+
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer>
-        <StatusBar style='auto' backgroundColor='#420a49' />
-        <Stack.Navigator initialRouteName='feed' screenOptions={screenOptions}>
-          <Stack.Screen name='feed' component={Feed} />
-          <Stack.Screen name='add-insight' component={AddInsight} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <Provider store={store}>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <StatusBar style='auto' backgroundColor='#420a49' />
+          <Stack.Navigator initialRouteName='feed' screenOptions={screenOptions}>
+            <Stack.Screen name='feed' component={Feed} />
+            <Stack.Screen name='add-insight' component={AddInsight} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </Provider>
   );
 }
 

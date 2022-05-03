@@ -4,7 +4,7 @@ import { Portal } from 'react-native-paper';
 
 import LoadMore from '../components/load-more';
 import SearchBar from '../components/search-bar';
-import CardContainer from '../components/card-container';
+import { CardContainer } from '../components/card-container';
 
 export default class Feed extends Component {
   private styles = StyleSheet.create({

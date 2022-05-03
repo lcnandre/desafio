@@ -1,22 +1,45 @@
 import { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { connect, ConnectedProps } from 'react-redux';
 
 import InsightCard from './insight-card';
+import { RootState } from '../reducers';
+import { fetchCards } from '../services/cards';
 
-export default class CardContainer extends Component {
-  private styles = StyleSheet.create({
-    cardsContainer: {
-      overflow: 'visible',
-      width: '94%',
-      top: -70
-    },
-  });
+class CardContainerComponent extends Component<CardContainerProps> {
+  componentDidMount() {
+    this.props.fetchCards();
+  }
 
   render() {
     return (
-      <View style={this.styles.cardsContainer}>
-        <InsightCard></InsightCard>
+      <View style={styles.cardsContainer}>
+        {this.props.insights.map((insight) => {
+          return (<InsightCard insight={insight}></InsightCard>)
+        })}
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  cardsContainer: {
+    overflow: 'visible',
+    width: '94%',
+    top: -70
+  },
+});
+
+const mapState = (state: RootState) => ({
+  loading: state.insightReducer.loading,
+  insights: state.insightReducer.insights,
+});
+
+const mapDispatch = {
+  fetchCards,
+};
+
+const connector = connect(mapState, mapDispatch);
+type CardContainerProps = ConnectedProps<typeof connector>;
+
+export const CardContainer = connector(CardContainerComponent);
