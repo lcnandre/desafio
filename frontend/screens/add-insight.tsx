@@ -31,7 +31,7 @@ export default class AddInsightComponent extends Component<AddInsightProps> {
           labelStyle={styles.publishButtonText}
           onPress={this.publishInsight}
           loading={this.props.creating}
-          disabled={this.props.creating}
+          disabled={this.props.creating || !!!this.props.newInsight?.text || !!!this.props.newInsight?.tagIds}
         >
           Publicar
         </Button>
