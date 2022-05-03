@@ -43,9 +43,15 @@ export class CardController {
   @ApiQuery({ name: 'page', example: '1' })
   @ApiQuery({ name: 'pageSize', example: '4', required: false })
   @ApiQuery({ name: 'tagIds', example: '1,2' })
+  @ApiQuery({ name: 'text', example: 'test' })
   @ApiCreatedResponse({ type: CardDto, isArray: true })
-  async listCards(@Query('page') page: number, @Query('pageSize') pageSize?: number, @Query('tagIds') tagIds?: undefined | number | number[]): Promise<CardDto[]> {
-    const result = await this.service.listCards(+page, +(pageSize | 4), this.getTagIds(tagIds));
+  async listCards(
+    @Query('page') page: number,
+    @Query('pageSize') pageSize?: number,
+    @Query('tagIds') tagIds?: undefined | number | number[],
+    @Query('text') text?: string | undefined,
+  ): Promise<CardDto[]> {
+    const result = await this.service.listCards(+page, +(pageSize | 4), this.getTagIds(tagIds), text);
     return result.map(CardDto.fromCard);
   }
 

@@ -2,12 +2,15 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { RootState } from '../reducers';
 import { createCard, CreateInsight, fetchCards, Insight } from '../services/cards';
+import { Tag } from '../services/tags';
 
 export interface InsightsState {
   insights: Insight[];
   loading: boolean;
   creating: boolean;
   page: number;
+  filterTags?: Tag[];
+  filterText?: string;
   newInsight?: CreateInsight;
 }
 
@@ -36,6 +39,12 @@ export const insightSlice = createSlice({
         state.newInsight = {} as CreateInsight;
       }
       state.newInsight.tagIds = payload.map((t: any) => +t.id);
+    },
+    setFilterTags(state, {payload}) {
+      state.filterTags = payload.map((t: any) => +t.id);
+    },
+    setFilterText(state, {payload}) {
+      state.filterText = payload;
     }
   },
   extraReducers: (builder) => {
@@ -68,6 +77,6 @@ export const insightSlice = createSlice({
   }
 });
 
-export const { incrementPage, setNewInsightText, setNewInsightTags } = insightSlice.actions;
+export const { incrementPage, setNewInsightText, setNewInsightTags, setFilterTags, setFilterText } = insightSlice.actions;
 export const insightSelector = (state: RootState) => state.insightReducer;
 export default insightSlice.reducer;
