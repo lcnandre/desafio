@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { Portal, ActivityIndicator } from 'react-native-paper';
 
-import SearchBar from '../components/search-bar';
+import { SearchBar } from '../components/search-bar';
 import { LoadMore } from '../components/load-more';
 import { CardContainer } from '../components/card-container';
 import { RootState } from '../reducers';

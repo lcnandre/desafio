@@ -9,7 +9,6 @@ export class ListCardsQuery {
   constructor(
     public readonly page: number,
     public readonly pageSize: number,
-    public readonly tagIds?: number[],
     public readonly text?: string,
   ) { }
 }
@@ -19,7 +18,7 @@ export class ListCardsHandler implements IQueryHandler<ListCardsQuery> {
   constructor(@InjectRepository(CardTable) private readonly repository: Repository<Card>) { }
 
   execute(query: ListCardsQuery): Promise<Card[]> {
-    const { page, pageSize, tagIds, text } = query;
+    const { page, pageSize, text } = query;
     const queryOptions: FindManyOptions<Card> = {
       take: pageSize,
       skip: pageSize * (page - 1),
@@ -41,20 +40,17 @@ export class ListCardsHandler implements IQueryHandler<ListCardsQuery> {
       }
     };
 
-    if (tagIds && tagIds.length) {
-      queryOptions.where = {
-        tags: {
-          id: In(tagIds)
-        }
-      }
-    }
-
     if (text && text.length) {
-      if (!queryOptions.where) {
-        queryOptions.where = {};
-      }
-
-      queryOptions.where['text'] = Like(`%${text}%`);
+      queryOptions.where = [
+        {
+          text: Like(`%${text}%`),
+        },
+        {
+          tags: {
+            name: Like(`%${text}%`)
+          }
+        }
+      ];
     }
 
     return this.repository.find(queryOptions);

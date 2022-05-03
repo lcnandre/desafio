@@ -39,9 +39,9 @@ export class CardService {
     );
   }
 
-  listCards(page: number, pageSize: number, tagIds?: number[], text?: string): Promise<Card[]> {
+  listCards(page: number, pageSize: number, text?: string): Promise<Card[]> {
     return this.queryBus.execute(
-      new ListCardsQuery(page, pageSize, tagIds, text)
+      new ListCardsQuery(page, pageSize, text)
     );
   }
 }

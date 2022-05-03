@@ -46,21 +46,21 @@ describe('List cards (use case)', () => {
   });
 
   it('Should list only cards from specified tags with filter', async () => {
-    const result = await listCards([initialTags[0].id]);
+    const result = await listCards(initialTags[0].name);
     expect(result).toBeDefined();
     expect(result).toBeInstanceOf(Array);
     expect(result.length).toBe(1);
   });
 
   it('Should only list cards that contains text with filter', async () => {
-    const result = await listCards(undefined, 'Another');
+    const result = await listCards('Another');
     expect(result).toBeDefined();
     expect(result).toBeInstanceOf(Array);
     expect(result.length).toBe(1);
   });
 
-  const listCards = (tagIds?: number[], text?: string): Promise<Card[]> => {
-    const query = new ListCardsQuery(1, 4, tagIds, text);
+  const listCards = (text?: string): Promise<Card[]> => {
+    const query = new ListCardsQuery(1, 4, text);
     const handler = new ListCardsHandler(repository);
 
     return handler.execute(query);

@@ -102,27 +102,48 @@ class MockRepository<T> {
   }
 
   private compareData(data: any, params: any) {
+    let match = false;
+
+    if (Array.isArray(params)) {
+      for (const param of params) {
+        match = this.compareData(data, param);
+      }
+
+      return match;
+    }
+
     for(const key of Object.keys(params)) {
       if (params[key]) {
         if (params[key].constructor.name === 'Object') {
-          return this.compareData(data[key], params[key]);
+          match = this.compareData(data[key], params[key]);
+          break;
         }
         switch(params[key]._type) {
           case 'in':
-            return Array.isArray(data)
+            match = Array.isArray(data)
               ? !!data.find(d => params[key]._value.includes(d[Object.keys(params)[0]]))
               : params[key]._value.includes(data[key]);
+            if (match) return match;
+            break;
           case 'like':
-            return data[key] && data[key].length && data[key].includes(params[key]._value.toString().replace(/\%/g, ''));
+            match = Array.isArray(data)
+              ? !!data.find(d => params[key]._value.includes(d[Object.keys(params)[0]].toString().replace(/\%/g, '')))
+              : data[key] && data[key].length && data[key].includes(params[key]._value.toString().replace(/\%/g, ''));
+            if (match) return match;
+            break;
           case 'between':
-            return data[key] >= params[key]._value[0] && data[key] <= params[key]._value[1]
+            match = data[key] >= params[key]._value[0] && data[key] <= params[key]._value[1];
+            if (match) return match;
+            break;
           default:
-            return data[key] === (params[key]._value || params[key]);
+            match = data[key] === (params[key]._value || params[key]);
+            if (match) return match;
+            break;
         }
       }
     }
 
-    return false;
+    return match;
   }
 
   private getType(typeName: string) {

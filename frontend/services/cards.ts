@@ -25,17 +25,11 @@ export const createCard = createAsyncThunk('insights/createInsight', async(_: an
 });
 
 export const fetchCards = createAsyncThunk('insights/fetchInsights', async (_: any, thunkAPI: any) => {
-  const { page, filterText, filterTags } = thunkAPI.getState().insightReducer;
+  const { page, filterText } = thunkAPI.getState().insightReducer;
   let url = `/?page=${page}&pageSize=4`;
 
   if (filterText && filterText.length) {
     url += `&text=${filterText}`;
-  }
-
-  if (filterTags && filterTags.length) {
-    for (const tag of filterTags) {
-      url += `&tagIds=${tag}`;
-    }
   }
 
   const response = await api.get(url);

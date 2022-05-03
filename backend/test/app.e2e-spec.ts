@@ -116,7 +116,7 @@ describe('AppController (e2e)', () => {
   it('/cards/ (GET)', () => {
     return request(app.getHttpServer())
       .get('/cards')
-      .query({ page: 1, tagIds: [initialTags[0].id] })
+      .query({ page: 1, text: initialTags[0].name })
       .expect(HttpStatus.OK)
       .then(res => {
         const result = res.body as CardDto[];

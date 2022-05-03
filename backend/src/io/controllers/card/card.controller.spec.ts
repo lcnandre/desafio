@@ -102,12 +102,7 @@ describe('CardController', () => {
     expect(result).toBeInstanceOf(Array);
     expect(result.length).toBe(3);
 
-    result = await controller.listCards(1, 4, initialTags[0].id);
-    expect(result).toBeDefined();
-    expect(result).toBeInstanceOf(Array);
-    expect(result.length).toBe(3);
-
-    result = await controller.listCards(1, 4, initialTags.map(t => t.id));
+    result = await controller.listCards(1, 4, initialTags[0].name);
     expect(result).toBeDefined();
     expect(result).toBeInstanceOf(Array);
     expect(result.length).toBe(3);
