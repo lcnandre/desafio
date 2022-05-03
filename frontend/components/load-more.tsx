@@ -31,8 +31,9 @@ export default class LoadMoreComponent extends Component<LoadMoreProps> {
 const styles = StyleSheet.create({
   loadMore: {
     color: '#fff',
+    flexGrow: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    position: 'relative'
   },
   loadMoreIcon: {
     margin: 0,

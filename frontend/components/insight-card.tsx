@@ -1,5 +1,5 @@
 import { Paragraph, Card, Chip } from 'react-native-paper';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Component } from 'react';
 
 import { Insight } from '../services/cards';
@@ -12,11 +12,13 @@ export default class InsightCard extends Component<InsightCardProps> {
   render() {
     return (
       <Card style={styles.cards}>
-        <Card.Content>
+        <Card.Content style={{width: '90vw'}}>
           <Paragraph style={styles.cardText}>{this.props.insight.text}</Paragraph>
-          {this.props.insight.tags?.map((tag, i) => {
-            return (<Chip style={styles.tags} textStyle={styles.tagsText} key={`tag-${i}`}>{tag.name}</Chip>);
-          })}
+          <View style={styles.tagContainer}>
+            {this.props.insight.tags?.map((tag, i) => {
+              return (<Chip style={styles.tags} textStyle={styles.tagsText} key={`tag-${i}`}>{tag.name}</Chip>);
+            })}
+          </View>
         </Card.Content>
       </Card>
     );
@@ -29,18 +31,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 'fit-content',
     marginBottom: 8,
+    width: '100%',
   },
   cardText: {
-    textAlign: 'center'
+    textAlign: 'center',
+    width: '100%',
+  },
+  tagContainer: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    width: 'fit-content',
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   tags: {
     backgroundColor: '#fff',
     borderColor: '#ee4c78',
     borderRadius: 4,
     width: 'fit-content',
-    marginLeft: 'auto',
-    marginRight: 'auto',
     marginTop: 10,
+    marginLeft: 2,
+    marginRight: 2
   },
   tagsText: {
     textTransform: 'uppercase',

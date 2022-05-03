@@ -11,8 +11,8 @@ import { RootState } from '../reducers';
 export default class FeedComponent extends Component<FeedProps> {
   private styles = StyleSheet.create({
     container: {
-      flex: 1,
       display: 'flex',
+      flexDirection: 'column',
       backgroundColor: '#f0f0f0',
       alignItems: 'center',
       justifyContent: 'flex-start',

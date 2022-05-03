@@ -7,7 +7,7 @@ export default class SearchBar extends Component {
     searchBar: {
       padding: '8px 8px',
       width: '95%',
-      position: 'absolute',
+      position: 'fixed',
       bottom: 6
     }
   });

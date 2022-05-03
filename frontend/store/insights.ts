@@ -1,17 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { RootState } from '../reducers';
-import { fetchCards, Insight } from '../services/cards';
+import { createCard, CreateInsight, fetchCards, Insight } from '../services/cards';
 
 export interface InsightsState {
   insights: Insight[];
   loading: boolean;
+  creating: boolean;
   page: number;
+  newInsight?: CreateInsight;
 }
 
 export const initialState: InsightsState = {
   insights: [] as Insight[],
   loading: false,
+  creating: false,
   page: 1,
 }
 
@@ -21,6 +24,18 @@ export const insightSlice = createSlice({
   reducers: {
     incrementPage(state) {
       state.page += 1;
+    },
+    setNewInsightText(state, {payload}) {
+      if (!state.newInsight) {
+        state.newInsight = {} as CreateInsight;
+      }
+      state.newInsight.text = payload;
+    },
+    setNewInsightTags(state, {payload}) {
+      if (!state.newInsight) {
+        state.newInsight = {} as CreateInsight;
+      }
+      state.newInsight.tagIds = payload.map((t: any) => +t.id);
     }
   },
   extraReducers: (builder) => {
@@ -28,15 +43,31 @@ export const insightSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(fetchCards.fulfilled, (state, { payload }) => {
-      state.insights.push(...payload);
+      if (state.page === 1) {
+        state.insights = payload;
+      } else {
+        state.insights.push(...payload);
+      }
       state.loading = false;
     });
     builder.addCase(fetchCards.rejected, state => {
       state.loading = false;
     });
-  }
-})
 
-export const { incrementPage } = insightSlice.actions;
+    builder.addCase(createCard.pending, state => {
+      state.creating = true;
+    });
+    builder.addCase(createCard.fulfilled, (state, { payload }) => {
+      state.insights.splice(state.insights.length-1, 1);
+      state.insights.push(payload);
+      state.creating = false;
+    });
+    builder.addCase(createCard.rejected, (state) => {
+      state.creating = false;
+    });
+  }
+});
+
+export const { incrementPage, setNewInsightText, setNewInsightTags } = insightSlice.actions;
 export const insightSelector = (state: RootState) => state.insightReducer;
 export default insightSlice.reducer;

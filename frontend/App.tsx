@@ -7,8 +7,9 @@ import { createNativeStackNavigator, NativeStackNavigationOptions } from '@react
 import FeedTopBar from './components/feed-top-bar';
 import GenericTopBar from './components/generic-top-bar';
 import { Feed } from './screens/feed';
-import AddInsight from './screens/add-insight';
+import { AddInsight } from './screens/add-insight';
 import store from './store';
+import './App.css';
 
 const theme = {
   ...DefaultTheme,
