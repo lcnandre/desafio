@@ -16,7 +16,7 @@ export interface Insight {
   tags?: Tag[];
 }
 
-export const fetchCards = createAsyncThunk('insights/fetchInsights', async (page = 1) => {
-  const response = await api.get(`/?page=${page}&pageSize=4`);
+export const fetchCards = createAsyncThunk('insights/fetchInsights', async (_: any, thunkAPI: any) => {
+  const response = await api.get(`/?page=${thunkAPI.getState().insightReducer.page}&pageSize=4`);
   return response.data as Insight[];
 });

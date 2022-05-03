@@ -14,8 +14,8 @@ export default class InsightCard extends Component<InsightCardProps> {
       <Card style={styles.cards}>
         <Card.Content>
           <Paragraph style={styles.cardText}>{this.props.insight.text}</Paragraph>
-          {this.props.insight.tags?.map(tag => {
-            return (<Chip style={styles.tags} textStyle={styles.tagsText}>{tag.name}</Chip>);
+          {this.props.insight.tags?.map((tag, i) => {
+            return (<Chip style={styles.tags} textStyle={styles.tagsText} key={`tag-${i}`}>{tag.name}</Chip>);
           })}
         </Card.Content>
       </Card>

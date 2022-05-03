@@ -14,8 +14,8 @@ class CardContainerComponent extends Component<CardContainerProps> {
   render() {
     return (
       <View style={styles.cardsContainer}>
-        {this.props.insights.map((insight) => {
-          return (<InsightCard insight={insight}></InsightCard>)
+        {this.props.insights.map((insight, i) => {
+          return (<InsightCard insight={insight} key={`card-${i}`}></InsightCard>)
         })}
       </View>
     );

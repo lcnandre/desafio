@@ -1,12 +1,14 @@
 import { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Portal } from 'react-native-paper';
+import { connect, ConnectedProps } from 'react-redux';
+import { Portal, ActivityIndicator } from 'react-native-paper';
 
-import LoadMore from '../components/load-more';
 import SearchBar from '../components/search-bar';
+import { LoadMore } from '../components/load-more';
 import { CardContainer } from '../components/card-container';
+import { RootState } from '../reducers';
 
-export default class Feed extends Component {
+export default class FeedComponent extends Component<FeedProps> {
   private styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -39,7 +41,8 @@ export default class Feed extends Component {
         <Portal>
           <View style={this.styles.container}>
             <CardContainer></CardContainer>
-            <LoadMore></LoadMore>
+            {this.props.loading && <ActivityIndicator animating={true} />}
+            {!this.props.loading && <LoadMore></LoadMore>}
             <SearchBar></SearchBar>
           </View>
         </Portal>
@@ -48,3 +51,12 @@ export default class Feed extends Component {
     );
   }
 }
+
+const mapState = (state: RootState) => ({
+  loading: state.insightReducer.loading,
+});
+
+const connector = connect(mapState);
+type FeedProps = ConnectedProps<typeof connector>;
+
+export const Feed = connector(FeedComponent);
